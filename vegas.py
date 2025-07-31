@@ -16,9 +16,9 @@ start_str = '2024-07-26 00:00:00'
 end_str = '2025-07-27 23:59:59'
 start_ts = int(datetime.strptime(start_str, "%Y-%m-%d %H:%M:%S").timestamp() * 1000)
 end_ts = int(datetime.strptime(end_str, "%Y-%m-%d %H:%M:%S").timestamp() * 1000)
-bars = client.get_historical_klines('BTCUSDT', '15m', start_ts, end_ts)
+bars = client.get_historical_klines('BTCUSDT', '5m', start_ts, end_ts)
 
-with open('1min.csv', 'w', newline='') as f:
+with open('5min.csv', 'w', newline='') as f:
     for line in bars:
         del line[6:]
     df = pd.DataFrame(bars, columns=['date', 'Open', 'High', 'Low', 'Close', 'Volume'])
@@ -26,9 +26,9 @@ with open('1min.csv', 'w', newline='') as f:
     df['date'] = df['seconds'].apply(lambda x: datetime.fromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S'))
     df.set_index('date', inplace=True)
     print(df.head()) ##確認資料是否正確
-    df.to_csv('15min.csv')
+    df.to_csv('5min.csv')
 
-df = pd.read_csv('15min.csv', index_col=0)
+df = pd.read_csv('5min.csv', index_col=0)
 
 ##轉資料為浮點數
 df['Open'] = df['Open'].astype(float)
@@ -101,9 +101,8 @@ pf = vbt.Portfolio.from_signals(price,
                             exits = signal['long_exit'],
                             short_entries = signal['short_entry'],
                             short_exits = signal['short_exit'],
-                            freq = '15m',
+                            freq = '5m',
                             fees = 0.0005)
 
 # 統計結果
-print(pf.stats)
-
+print(pf.stats())
