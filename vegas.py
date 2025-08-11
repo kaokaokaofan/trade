@@ -106,4 +106,3 @@ pf = vbt.Portfolio.from_signals(price,
 
 # 統計結果
 print(pf.stats())
-pdfj
