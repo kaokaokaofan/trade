@@ -1,0 +1,75 @@
+//@version=5
+indicator("Kill Zones 方框版 (台北時間)", overlay=true, max_boxes_count=500)
+
+// ===== 參數 =====
+doNYSession     = input(true,  "NY Session On")
+doAsiaSession   = input(true,  "Tokyo Session On")
+doLondonSession = input(true,  "London Session On")
+
+// ===== 工具 =====
+timeIn(sess) => time("1", sess) != 0        // 以 UTC 時段字串判斷
+isWeekend = dayofweek == dayofweek.saturday or dayofweek == dayofweek.sunday
+
+// ===== Asia (UTC 00:00–06:15) =====
+var box   asiaBox  = na
+var float asiaHigh = na
+var float asiaLow  = na
+asiaOn = doAsiaSession and timeIn("0000-0615") and not isWeekend
+if asiaOn
+    if na(asiaBox)
+        asiaHigh := high
+        asiaLow  := low
+        // 單行建立，避免換行語法誤判
+        asiaBox := box.new(time, high, time, low, xloc=xloc.bar_time, bgcolor=color.new(color.green, 85))
+    else
+        asiaHigh := math.max(asiaHigh, high)
+        asiaLow  := math.min(asiaLow,  low)
+        box.set_top(asiaBox, asiaHigh)
+        box.set_bottom(asiaBox, asiaLow)
+        box.set_right(asiaBox, time)
+if not asiaOn and not na(asiaBox)
+    asiaBox  := na
+    asiaHigh := na
+    asiaLow  := na
+
+// ===== London (UTC 07:00–11:15) =====
+var box   londonBox  = na
+var float londonHigh = na
+var float londonLow  = na
+londonOn = doLondonSession and timeIn("0700-1115") and not isWeekend
+if londonOn
+    if na(londonBox)
+        londonHigh := high
+        londonLow  := low
+        londonBox := box.new(time, high, time, low, xloc=xloc.bar_time, bgcolor=color.new(color.white, 85))
+    else
+        londonHigh := math.max(londonHigh, high)
+        londonLow  := math.min(londonLow,  low)
+        box.set_top(londonBox, londonHigh)
+        box.set_bottom(londonBox, londonLow)
+        box.set_right(londonBox, time)
+if not londonOn and not na(londonBox)
+    londonBox  := na
+    londonHigh := na
+    londonLow  := na
+
+// ===== New York (UTC 12:00–16:15) =====
+var box   nyBox  = na
+var float nyHigh = na
+var float nyLow  = na
+nyOn = doNYSession and timeIn("1200-1615") and not isWeekend
+if nyOn
+    if na(nyBox)
+        nyHigh := high
+        nyLow  := low
+        nyBox := box.new(time, high, time, low, xloc=xloc.bar_time, bgcolor=color.new(color.blue, 85))
+    else
+        nyHigh := math.max(nyHigh, high)
+        nyLow  := math.min(nyLow,  low)
+        box.set_top(nyBox, nyHigh)
+        box.set_bottom(nyBox, nyLow)
+        box.set_right(nyBox, time)
+if not nyOn and not na(nyBox)
+    nyBox  := na
+    nyHigh := na
+    nyLow  := na
