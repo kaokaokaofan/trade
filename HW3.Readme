@@ -1,0 +1,11 @@
+# HW3
+
+> 本程式以 `pandas` / `numpy` 自行實作 BIAS、RSI、MACD 指標，並透過 `yfinance` 下載台股加權指數 (^TWII) 日線資料。  
+> 接著依 Triple Barrier 方法產生標籤 (`TB_Label`)，最後使用 `StandardScaler` + `PCA` 做降維分析與視覺化。
+
+##環境需求
+
+- Python 3.9 以上  
+- 需安裝以下套件：
+```bash
+pip install pandas numpy yfinance matplotlib scikit-learn
